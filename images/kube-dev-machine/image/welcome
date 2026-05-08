@@ -1,0 +1,15 @@
+Welcome to your Kubernetes Developer Machine! 🎉
+
+This environment serves as your dedicated workspace for interacting with the Kubernetes cluster from outside its boundaries.
+Here, you can explore, experiment, and manage your cluster resources with confidence.
+
+Available tools:
+
+- kubectl
+- krew
+- kustomize
+- helm
+- k9s
+- kubeletctl
+
+Happy learning! 🚀

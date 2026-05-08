@@ -1,0 +1,11 @@
+[Unit]
+Description=Install Caddy local CA into system trust store (after Caddy starts)
+After=caddy.service
+PartOf=caddy.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/caddy trust
+
+[Install]
+WantedBy=caddy.service

@@ -1,0 +1,16 @@
+# Set the cluster, skipping TLS verification
+kubectl config set-cluster my-cluster \
+  --server=https://control-plane:6443 \
+  --insecure-skip-tls-verify=true
+
+# Set the credentials using a bearer token
+kubectl config set-credentials my-user \
+  --token=YOUR_TOKEN_HERE
+
+# Create a context using the cluster and user
+kubectl config set-context my-context \
+  --cluster=my-cluster \
+  --user=my-user
+
+# Use the new context
+kubectl config use-context my-context

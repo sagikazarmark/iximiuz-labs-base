@@ -1,0 +1,14 @@
+[Unit]
+Description=Load container images after containerd starts
+Requires=containerd.service
+After=containerd.service
+ConditionPathExists=/run/containerd/containerd.sock
+
+[Service]
+Type=oneshot
+ExecStart=image-loader
+RemainAfterExit=yes
+Restart=on-failure
+
+[Install]
+WantedBy=containerd.service

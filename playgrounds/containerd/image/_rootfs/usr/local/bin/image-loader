@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -d /opt/images ]]; then
+    find /opt/images -type f -name "*.tar" -exec /usr/share/containerd/load-image.sh {} \;
+fi

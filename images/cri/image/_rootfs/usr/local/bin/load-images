@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+for img in "$@"; do
+    load-image $img
+done

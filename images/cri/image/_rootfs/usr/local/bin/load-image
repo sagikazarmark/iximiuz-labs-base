@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: $0 <image.tar>"
+    exit 1
+fi
+
+cri=$(jq -r '."Container runtime" // "containerd"' /opt/iximiuz-labs/init-conditions.json)
+
+case $cri in
+    "containerd")
+        /usr/share/containerd/load-image.sh $1
+        ;;
+    "cri-o")
+        /usr/share/crio/load-image.sh $1
+        ;;
+    *)
+        echo "Unsupported container runtime: $cri"
+        echo "Supported options: containerd, cri-o"
+        exit 1
+        ;;
+esac

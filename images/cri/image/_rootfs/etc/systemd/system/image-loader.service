@@ -1,0 +1,16 @@
+[Unit]
+Description=Load container images after the conainer runtime starts
+Requires=container-runtime.target
+After=container-runtime.target
+After=containerd.service crio.service
+ConditionPathExists=|/run/containerd/containerd.sock
+ConditionPathExists=|/run/crio/crio.sock
+
+[Service]
+Type=oneshot
+ExecStart=image-loader
+RemainAfterExit=yes
+Restart=on-failure
+
+[Install]
+WantedBy=container-runtime.target

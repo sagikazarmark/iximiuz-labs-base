@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+version=$(kubeadm version -o short)
+cri=$(jq -r '."Container runtime" // "containerd"' /opt/iximiuz-labs/init-conditions.json 2>/dev/null || echo "containerd")
+oci=$(jq -r '."OCI runtime" // "runc"' /opt/iximiuz-labs/init-conditions.json 2>/dev/null || echo "runc")
+cni=$(jq -r '."Network addon" // "flannel"' /opt/iximiuz-labs/init-conditions.json 2>/dev/null || echo "flannel")
+
+cat <<EOF
+⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣠⡾⠿⣿⣿⣿⠇⠀⢀⡤⠖⠛⠛⠓⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢠⣿⠁⠀⠉⠉⠉⣠⠙⢦⡀⠀⠀⠀⠀⠈⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢸⡇⠀⠀⣀⣀⣈⣁⣠⣄⣉⣀⣀⣀⠀⠀⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⣀⠘⣿⠘⠋⢉⠉⠉⠉⢡⠉⠉⠉⠉⡙⠛⠻⢶⣤⣄⠀⠀⠀⠀⠀⣶⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣶⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣴⠟⠁⠀⢻⡆⠰⠃⠲⣤⠖⢺⠓⢦⡤⠂⠹⠄⣰⠆⠈⠙⢷⣄⠀⠀⠀⣿⡇⠀⣀⣀⡀⢀⣀⡀⠀⣀⣀⠀⢸⣿⣤⣤⣄⠀⠀⠀⢀⣠⣤⣀⠀⠀⢀⣤⣤⣄⡀⠀⠀⢀⣠⣤⣸⣿⠀⠀⣀⣤⣤⣄⣀⣤⣤⡀⠀
+⢸⠃⠀⠀⠀⠈⣷⡀⠀⢰⣋⣳⡞⣶⣋⣹⠀⠀⢰⡟⠀⠀⠀⠀⣿⡆⠀⠀⣿⣧⣴⡿⠋⠀⢸⣿⠀⠀⣿⣿⠀⢸⣿⠋⠙⢿⣷⠀⢰⣿⠋⠙⣿⣧⠀⠈⢉⣉⣻⣿⠀⢠⣿⡟⠉⢻⣿⠀⠀⣿⡟⠙⣿⣿⠉⢻⣿⡄
+⠘⢧⡀⠀⠀⢀⠘⣷⡐⠙⢯⣩⠟⢿⣉⡟⠙⢠⡟⢠⠀⢠⣾⣿⣿⡇⠀⠀⣿⡟⢿⣷⡀⠀⢸⣿⡄⠀⣿⣿⠀⢸⣿⠀⠀⣼⣿⠀⢻⣿⡛⠛⠛⠛⠀⣾⡿⠛⢻⣿⠀⢸⣿⡇⠀⢸⣿⠀⠀⣿⡇⠀⣿⣿⠀⢸⣿⡇
+⠀⠀⠙⠦⠄⡎⠀⠘⢷⡀⠀⠟⠛⠛⢫⠀⣰⡟⠀⠈⣃⡈⠿⣿⠿⠁⠀⠀⠿⠇⠀⠻⠿⠆⠈⠻⠿⠿⠿⠟⠀⠸⠿⠿⠿⠿⠃⠀⠈⠻⠿⠿⠿⠇⠀⠻⠿⠶⠾⠿⠀⠀⠙⠿⠿⠿⠿⠀⠀⠿⠇⠀⠿⠿⠀⠸⠿⠇
+⠀⠀⠀⠀⠀⣃⠉⠓⠈⠻⣄⠀⠀⠀⢀⣼⠏⠀⠋⠉⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢰⣿⣿⣷⡄⠀⠀⠘⠷⢀⣴⠟⠁⠀⠀⠀⠀⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠘⠿⢿⣿⣁⢀⣀⣠⣶⠟⠁⣤⣀⠀⠀⢀⡴⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠉⠛⠛⠛⠉⠀⠀⠀⠀⠉⠙⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
+
+
+Welcome to kubeadm! 🎉
+
+A tool built to provide "fast paths" for creating Kubernetes clusters.
+
+🏷️ Version:                   ${version}
+🐳 Container runtime:         ${cri}
+📦 OCI runtime:               ${oci}
+🌐 Default network addon:     ${cni}
+⚙️ Config dir:                /etc/kubernetes
+
+More about kubeadm: https://kubernetes.io/docs/reference/setup-tools/kubeadm/
+
+Happy learning! 🚀
+EOF

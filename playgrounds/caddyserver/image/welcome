@@ -1,0 +1,11 @@
+Welcome to Caddy! 🎉
+
+A powerful, extensible platform to serve your sites, services, and apps.
+
+🏷️ Version:          VERSION
+🌐 Web endpoint:     http://localhost
+⚙️ Config file:      /etc/caddy/Caddyfile
+
+More about Caddy: https://caddyserver.com
+
+Happy learning! 🚀

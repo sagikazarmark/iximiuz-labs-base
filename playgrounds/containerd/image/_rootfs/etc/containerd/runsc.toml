@@ -1,0 +1,3 @@
+# Config options: https://github.com/google/gvisor/blob/3cc1182c9d37bed8ed9bbb6f91ef6f1c5f36a614/runsc/config/config.go
+[runsc_config]
+systemd-cgroup = "true"

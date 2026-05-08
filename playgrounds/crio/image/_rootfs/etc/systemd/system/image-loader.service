@@ -1,0 +1,14 @@
+[Unit]
+Description=Load container images after CRI-O starts
+Requires=crio.service
+After=crio.service
+ConditionPathExists=/run/crio/crio.sock
+
+[Service]
+Type=oneshot
+ExecStart=image-loader
+RemainAfterExit=yes
+Restart=on-failure
+
+[Install]
+WantedBy=crio.service
