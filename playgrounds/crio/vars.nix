@@ -1,3 +1,3 @@
 {
-  crioVersion = "v1.33";
+  crioVersion = "v1.35";
 }

@@ -13,6 +13,7 @@ RUN set -xe; \
 
 ARG KUBE_VERSION
 RUN --mount=type=bind,source=install.sh,target=/install.sh /install.sh
+RUN --mount=type=bind,source=download-kubeadm-images.sh,target=/download.sh /download.sh
 
 
 FROM base AS flannel

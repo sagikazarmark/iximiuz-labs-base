@@ -30,7 +30,7 @@ build-bake name channel="dev":
 build-image name channel="dev":
     #!/usr/bin/env bash
     bake=$(just build-bake {{ name }} {{ channel }})
-    docker buildx bake -f "$bake"
+    docker buildx bake --progress plain -f "$bake"
 
 # Build playground Nix outputs, then build its image locally.
 build-playground name channel="dev":
