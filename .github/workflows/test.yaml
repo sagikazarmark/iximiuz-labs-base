@@ -44,8 +44,12 @@ jobs:
         with:
           github_access_token: ${{ github.token }}
 
+      # Required because login generates the ssh key
+      - name: Log in to iximiuz Labs
+        run: nix develop -c labctl auth login --session-id ${{ secrets.session-id }} --access-token ${{ secrets.access-token }}
+
       - name: Test
         run: nix develop -c just test ${{ inputs.name }} ${{ inputs.channel }} ${{ matrix.tier }}
-        env:
-          IXIMIUZ_SESSION_ID: ${{ secrets.session-id }}
-          IXIMIUZ_ACCESS_TOKEN: ${{ secrets.access-token }}
+        # env:
+        #   IXIMIUZ_SESSION_ID: ${{ secrets.session-id }}
+        #   IXIMIUZ_ACCESS_TOKEN: ${{ secrets.access-token }}
