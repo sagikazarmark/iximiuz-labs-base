@@ -59,6 +59,7 @@ sudo kubeadm init \
     --skip-phases show-join-command
 
 $DIR/kubeconfig.sh
+# TODO: add waiting for control plane to become available
 $DIR/install-cni.sh $cni
 
 if [[ $removeTaint = true ]]; then
