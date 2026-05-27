@@ -125,7 +125,23 @@ in
     ++ map mkWorkerTab workerIndices;
     # Tasks expanded per-worker (labx render expects single-machine).
     initTasks = builtins.listToAttrs (
-      builtins.concatMap (
+      [
+        {
+          name = "init_wait_keepalived";
+          value = {
+            init = true;
+            machine = "dev-machine";
+            user = "root";
+            run = ''
+              until ping -c 1 -W 1 172.16.0.254 >/dev/null 2>&1; do
+                echo "Waiting for keepalived VIP 172.16.0.254..."
+                sleep 1
+              done
+            '';
+          };
+        }
+      ]
+      ++ builtins.concatMap (
         w:
         let
           s = "_${builtins.replaceStrings [ "-" ] [ "_" ] w}";
@@ -134,17 +150,18 @@ in
           {
             name = "init_oci${s}";
             value = {
-              name = "init_oci${s}";
               init = true;
               machine = w;
               user = "root";
-              run = "/usr/share/containerd/configure-oci.sh\n/usr/share/crio/configure-oci.sh";
+              run = ''
+                /usr/share/containerd/configure-oci.sh
+                /usr/share/crio/configure-oci.sh
+              '';
             };
           }
           {
             name = "init_start_containerd${s}";
             value = {
-              name = "init_start_containerd${s}";
               init = true;
               machine = w;
               user = "root";
@@ -161,7 +178,6 @@ in
           {
             name = "init_start_crio${s}";
             value = {
-              name = "init_start_crio${s}";
               init = true;
               machine = w;
               user = "root";
