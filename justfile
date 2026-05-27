@@ -71,7 +71,6 @@ test name channel="dev" tier="premium":
     #!/usr/bin/env bash
     out=$(just build {{ name }} {{ channel }})
     slug=$(yq -r .name "$out/content/manifest.yaml")
-    machine=$(yq -r '.playground.tabs[] | select(.kind == "terminal") | .machine' "$out/content/manifest.yaml" | sed -n '1p')
 
     startArgs=(-q)
     if [[ "{{ tier }}" == "free" ]]; then
@@ -84,7 +83,7 @@ test name channel="dev" tier="premium":
     if [[ -f "playgrounds/{{ name }}/tests/run.sh" ]]; then
       bash "playgrounds/{{ name }}/tests/run.sh" "$playId"
     elif [[ -f "playgrounds/{{ name }}/tests.sh" ]]; then
-      labctl ssh --machine "$machine" --user laborant "$playId" < "playgrounds/{{ name }}/tests.sh"
+      labctl ssh --user laborant "$playId" < "playgrounds/{{ name }}/tests.sh"
     else
       echo "no tests found for playground: {{ name }}" >&2
       exit 1
