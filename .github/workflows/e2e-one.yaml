@@ -15,6 +15,9 @@ on:
         options:
           - live
           - dev
+      enabled_free_tier:
+        description: Enable free tier?
+        type: boolean
 
 permissions:
   contents: read
@@ -29,6 +32,7 @@ jobs:
     with:
       name: ${{ inputs.name }}
       channel: ${{ inputs.channel }}
+      enabled_free_tier: ${{ inputs.enabled_free_tier }}
     secrets:
       session-id: ${{ secrets.IXIMIUZ_SESSION_ID }}
       access-token: ${{ secrets.IXIMIUZ_ACCESS_TOKEN }}
