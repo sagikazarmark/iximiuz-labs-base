@@ -22,7 +22,7 @@ let
     context = lib.mkContext ./images/kubeadm;
   };
 
-  main = lib.tagTarget "playgrounds/kubeadm" (
+  main = lib.tagTarget "base/kubeadm" (
     base
     // {
       name = "main";
@@ -46,7 +46,7 @@ let
     };
   };
 
-  defaults = lib.tagTarget "playgrounds/kubeadm/defaults" (
+  defaults = lib.tagTarget "base/kubeadm/defaults" (
     withContainerd
     // {
       name = "defaults";
@@ -54,7 +54,7 @@ let
     }
   );
 
-  devMachine = lib.tagTarget "playgrounds/kubeadm/dev-machine" (
+  devMachine = lib.tagTarget "base/kubeadm/dev-machine" (
     lib.mkTarget {
       name = "dev-machine";
       platforms = [ "linux/amd64" ];

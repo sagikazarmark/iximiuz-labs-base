@@ -29,7 +29,7 @@ let
     target = "ready";
   };
 
-  main = lib.tagTarget "playgrounds/cri-o" (
+  main = lib.tagTarget "base/cri-o" (
     base
     // {
       name = "main";

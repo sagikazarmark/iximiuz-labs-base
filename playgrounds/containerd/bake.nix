@@ -40,7 +40,7 @@ let
     target = "ready";
   };
 
-  main = lib.tagTarget "playgrounds/containerd" (
+  main = lib.tagTarget "base/containerd" (
     base
     // {
       name = "main";

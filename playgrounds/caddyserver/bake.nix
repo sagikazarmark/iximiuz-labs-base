@@ -18,7 +18,7 @@ in
   targets = {
     inherit base;
 
-    default = lib.tagTarget "playgrounds/caddyserver" (
+    default = lib.tagTarget "base/caddyserver" (
       base
       // {
         name = "default";

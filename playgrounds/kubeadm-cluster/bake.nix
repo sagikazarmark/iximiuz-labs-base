@@ -18,9 +18,9 @@ let
     inherit args;
   };
 
-  controlPlane = lib.tagTarget "playgrounds/kubeadm-cluster/control-plane" controlPlaneBase;
+  controlPlane = lib.tagTarget "base/kubeadm-cluster/control-plane" controlPlaneBase;
 
-  controlPlaneDefaults = lib.tagTarget "playgrounds/kubeadm-cluster/control-plane-defaults" (
+  controlPlaneDefaults = lib.tagTarget "base/kubeadm-cluster/control-plane-defaults" (
     controlPlaneBase
     // {
       name = "control-plane-defaults";
@@ -39,9 +39,9 @@ let
     };
   };
 
-  worker = lib.tagTarget "playgrounds/kubeadm-cluster/worker" workerBase;
+  worker = lib.tagTarget "base/kubeadm-cluster/worker" workerBase;
 
-  workerDefaults = lib.tagTarget "playgrounds/kubeadm-cluster/worker-defaults" (
+  workerDefaults = lib.tagTarget "base/kubeadm-cluster/worker-defaults" (
     workerBase
     // {
       name = "worker-defaults";
@@ -51,7 +51,7 @@ let
     }
   );
 
-  main = lib.tagTarget "playgrounds/kubeadm-cluster" (
+  main = lib.tagTarget "base/kubeadm-cluster" (
     lib.mkTarget {
       name = "main";
       platforms = [ "linux/amd64" ];
@@ -83,7 +83,7 @@ let
     };
   };
 
-  devMachine = lib.tagTarget "playgrounds/kubeadm-cluster/dev-machine" (
+  devMachine = lib.tagTarget "base/kubeadm-cluster/dev-machine" (
     lib.mkTarget {
       name = "dev-machine";
       platforms = [ "linux/amd64" ];
