@@ -9,7 +9,10 @@
   ...
 }:
 let
-  args = lib.toBuildArgs { inherit kubeVersion flannelVersion; };
+  args = lib.toBuildArgs { inherit kubeVersion flannelVersion; } // {
+    # Until the following PR is released: https://github.com/google/go-containerregistry/issues/2309
+    CRANE_VERSION = "v0.21.5";
+  };
 
   base = lib.mkTarget {
     inherit args;

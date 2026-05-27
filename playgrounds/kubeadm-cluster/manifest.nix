@@ -26,6 +26,7 @@ let
       {
         source = images.main.passthru.imageRef;
         mount = "/";
+        size = "50GiB";
       }
     ];
     network.interfaces = [
@@ -90,6 +91,7 @@ in
           {
             source = images."dev-machine".passthru.imageRef;
             mount = "/";
+            size = "40GiB";
           }
         ];
         network.interfaces = [
