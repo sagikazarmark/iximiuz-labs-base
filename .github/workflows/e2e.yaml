@@ -1,0 +1,40 @@
+name: e2e
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Channel name
+        required: true
+        default: "live"
+        type: choice
+        options:
+          - live
+          - dev
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test
+    concurrency:
+      group: ${{ matrix.name }}
+      cancel-in-progress: false
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        name:
+          - caddyserver
+          - containerd
+          - crio
+          - kubeadm
+          - kubeadm-cluster
+    uses: ./.github/workflows/test.yaml
+    with:
+      name: ${{ matrix.name }}
+      channel: ${{ inputs.channel }}
+    secrets:
+      session-id: ${{ secrets.IXIMIUZ_SESSION_ID }}
+      access-token: ${{ secrets.IXIMIUZ_ACCESS_TOKEN }}

@@ -1,0 +1,51 @@
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        description: Playground name
+        required: true
+        type: string
+      channel:
+        description: Channel name
+        required: true
+        type: string
+      enabled_free_tier:
+        description: Enable free tier?
+        type: boolean
+    secrets:
+      session-id:
+        description: Session ID
+        required: true
+      access-token:
+        description: Access token
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        tier: ${{ fromJSON(inputs.enabled_free_tier && '["premium","free"]' || '["premium"]') }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+        with:
+          github_access_token: ${{ github.token }}
+
+      - name: Test
+        run: devenv shell -- just test ${{ inputs.name }} ${{ inputs.channel }} ${{ matrix.tier }}
+        env:
+          IXIMIUZ_SESSION_ID: ${{ secrets.session-id }}
+          IXIMIUZ_ACCESS_TOKEN: ${{ secrets.access-token }}
